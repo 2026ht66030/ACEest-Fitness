@@ -9,6 +9,21 @@ pipeline {
                 checkout scm 
             }
         }
+
+        stage('build') {
+            steps {
+                echo 'installing python dependencies'
+                sh ''' 
+
+                    python3 -m venv .venv 
+
+                    .venv/bin/pip install -r requirements.txt 
+
+                ''' 
+            }
+        }
+
+
         
         stage('Run Unit Tests') {
             steps {
