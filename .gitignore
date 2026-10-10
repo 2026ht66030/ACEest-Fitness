@@ -1,0 +1,35 @@
+# Python bytecode and cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Testing and coverage reports
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+
+# Local SQLite databases (as used in your ACEest project versions)
+*.db
+*.sqlite3
+
+# PDF report outputs generated locally
+*_report.pdf
+
+# IDE and Editor specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific files
+.DS_Store
+Thumbs.db
