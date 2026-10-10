@@ -1,28 +1,39 @@
-import pytest
+"""Simple pytest tests for ACEestFull.py.
 
-def test_fat_loss_calorie_calculation():
-    weight = 70.0
-    factor_fl = 22  # Fat Loss factor
-    calories = int(weight * factor_fl)
-    assert calories == 1540
+Run:
+    pytest test_ACEestFull.py -v
+"""
+import sqlite3
+import app as app
 
-def test_muscle_gain_calorie_calculation():
-    weight = 70.0
-    factor_mg = 35  # Muscle Gain factor
-    calories = int(weight * factor_mg)
-    assert calories == 2450
 
-def test_beginner_calorie_calculation():
-    weight = 60.0
-    factor_bg = 26  # Beginner factor
-    calories = int(weight * factor_bg)
-    assert calories == 1560
+def test_default_admin_credentials(tmp_path, monkeypatch):
+    # Use a temporary database for this test.
+    test_db = tmp_path / "test_aceest.db"
+    monkeypatch.setattr(app, "DB_NAME", str(test_db))
 
-def test_programs_dictionary_structure():
-    programs = {
-        "Fat Loss (FL)": {"calorie_factor": 22},
-        "Muscle Gain (MG)": {"calorie_factor": 35},
-        "Beginner (BG)": {"calorie_factor": 26}
-    }
-    assert "Fat Loss (FL)" in programs
-    assert programs["Muscle Gain (MG)"]["calorie_factor"] == 35
+    app.init_db()
+
+    with sqlite3.connect(test_db) as conn:
+        row = conn.execute(
+            "SELECT role FROM users WHERE username=? AND password=?",
+            ("admin", "admin"),
+        ).fetchone()
+
+    assert row is not None
+    assert row[0] == "Admin"
+
+
+def test_invalid_credentials_are_not_in_database(tmp_path, monkeypatch):
+    test_db = tmp_path / "test_aceest.db"
+    monkeypatch.setattr(app, "DB_NAME", str(test_db))
+
+    app.init_db()
+
+    with sqlite3.connect(test_db) as conn:
+        row = conn.execute(
+            "SELECT role FROM users WHERE username=? AND password=?",
+            ("wrong_user", "wrong_password"),
+        ).fetchone()
+
+    assert row is None
