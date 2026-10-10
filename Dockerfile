@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 5000
 
 # Use xvfb-run to provide a virtual display environment for Tkinter
-CMD ["xvfb-run", "python", "app.py"]
+CMD [ "python", "app.py"]
