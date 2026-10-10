@@ -12,8 +12,12 @@ pipeline {
         
         stage('Run Unit Tests') {
             steps {
-                // Keep your existing test execution command here
-                sh 'pytest -v'
+                echo 'Running python test'
+                sh ''' 
+
+                    .venv/bin/python3 -m pytest 
+
+                ''' 
             }
         }
         
