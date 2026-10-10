@@ -28,11 +28,7 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 echo 'Running python test'
-                sh ''' 
-
-                    .venv/bin/python3 -m pytest 
-
-                ''' 
+                sh 'xvfb-run pytest'
             }
         }
         
