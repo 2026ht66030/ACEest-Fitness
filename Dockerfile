@@ -1,29 +1,25 @@
 FROM python:3.9-slim
 
-# Install system dependencies, Tkinter, Xvfb, VNC, and web tools
+# 1. Install system dependencies, Tkinter libraries, and Xvfb for virtual display
 RUN apt-get update && apt-get install -y \
     python3-tk \
     tk \
     tcl \
     xvfb \
-    x11vnc \
-    fluxbox \
-    net-tools \
     && rm -rf /var/lib/apt/lists/*
 
+# 2. Set working directory
 WORKDIR /app
 
+# 3. Copy requirements and install python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# 4. Copy the rest of the application code
+COPY . /app
 
-EXPOSE 8080
+# 5. Expose port if your app uses networking (optional)
+EXPOSE 5000
 
-# Create a startup script or command to launch Xvfb, a window manager, the VNC server, and your app
-# (For simplicity, we can run them sequentially or via a start script)
-CMD Xvfb :99 -screen 0 1024x768x24 & \
-    export DISPLAY=:99 && \
-    fluxbox & \
-    x11vnc -display :99 -forever -nopw -listen localhost -xkb & \
-    python app.py
+# 6. Start Xvfb virtual display, export the display variable, and run the app
+CMD Xvfb :99 -screen 0 1024x768x24 & export DISPLAY=:99 && python app.py
